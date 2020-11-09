@@ -64,6 +64,10 @@
       messagingSenderId: "346374978790"
     };
     firebase.initializeApp(config);
+    
+    if (localStorage.getItem("automatedTest")) {
+      firebase.auth().settings.appVerificationDisabledForTesting = true;
+    }
 
     window['phoneRecaptchaVerifier'] = new firebase.auth.RecaptchaVerifier('phone-sign-in-recaptcha', {
       /*'size': 'invisible',*/
