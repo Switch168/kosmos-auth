@@ -1,55 +1,61 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kosmos Auth</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css"
+    />
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"
+    ></script>
   </head>
   <body>
-  <section class="section">
-    <div class="container">
-      <h1 class="title">
-       Kosmos Mobile 
-      </h1>
-      <p class="subtitle">
-        We need to verify you are a <strong>human</strong>!
-      </p>
-      <div id="phone-sign-in-recaptcha"></div>
-      <br>
-      <div id='thanks' style="display:none;" class="subtitle thank-you">
-        <p>Thank you for <strong>verifying!</strong>! you can close this tab now.</p>
-        <br>
-        <a href="#" class="button is-fullwidth" id="next">Done!</a>
+    <section class="section">
+      <div class="container">
+        <h1 class="title">Kosmos Mobile</h1>
+        <p class="subtitle">
+          We need to verify you are a <strong>human</strong>!
+        </p>
+        <div id="phone-sign-in-recaptcha"></div>
+        <br />
+        <div id="thanks" style="display: none" class="subtitle thank-you">
+          <p>
+            Thank you for <strong>verifying!</strong>! you can close this tab
+            now.
+          </p>
+          <br />
+          <a href="#" class="button is-fullwidth is-link" id="next">Done!</a>
+        </div>
       </div>
-  
-    </div>
-  </section>
+    </section>
   </body>
   <script>
-    function postMessage(message){
-      if(!webkit.messageHandlers.cordova_iab) throw "Cordova IAB postMessage API not found!";
+    function postMessage(message) {
+      if (!webkit.messageHandlers.cordova_iab)
+        throw "Cordova IAB postMessage API not found!";
       webkit.messageHandlers.cordova_iab.postMessage(JSON.stringify(message));
     }
     function toggleHide(divId) {
       var x = document.getElementById(divId);
       if (x.style.display === "none") {
-          x.style.display = "block";
+        x.style.display = "block";
       } else {
-          x.style.display = "none";
-      } 
+        x.style.display = "none";
+      }
     }
     function imNotARobot(captchaToken) {
-      
-      var urlToRedirect = 'kosmos://kosmosmobile.com/welcome'
-      var nextButton = document.getElementById('next');
+      var urlToRedirect = "kosmos://kosmosmobile.com/welcome";
+      var nextButton = document.getElementById("next");
 
       nextButton.addEventListener("click", () => {
-        postMessage({token: captchaToken});
+        postMessage({ token: captchaToken });
       });
 
-      toggleHide('thanks')
+      toggleHide("thanks");
     }
   </script>
   <script src="https://www.gstatic.com/firebasejs/5.0.0/firebase.js"></script>
@@ -61,24 +67,27 @@
       databaseURL: "https://kosmos-32014.firebaseio.com",
       projectId: "kosmos-32014",
       storageBucket: "kosmos-32014.appspot.com",
-      messagingSenderId: "346374978790"
+      messagingSenderId: "346374978790",
     };
     firebase.initializeApp(config);
-    
+
     if (localStorage.getItem("automatedTest")) {
       firebase.auth().settings.appVerificationDisabledForTesting = true;
     }
 
-    window['phoneRecaptchaVerifier'] = new firebase.auth.RecaptchaVerifier('phone-sign-in-recaptcha', {
-      /*'size': 'invisible',*/
-      'callback': function(response) {
-        imNotARobot(response) 
-      },
-      'expired-callback': function() {
-        location.reload()
+    window["phoneRecaptchaVerifier"] = new firebase.auth.RecaptchaVerifier(
+      "phone-sign-in-recaptcha",
+      {
+        /*'size': 'invisible',*/
+        callback: function (response) {
+          imNotARobot(response);
+        },
+        "expired-callback": function () {
+          location.reload();
+        },
       }
-    });
+    );
 
-    window.phoneRecaptchaVerifier.render()
+    window.phoneRecaptchaVerifier.render();
   </script>
 </html>
